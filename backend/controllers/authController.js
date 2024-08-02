@@ -31,7 +31,7 @@ const register = async (req, res) => {
       throw new Error("please add all fields");
     }
     if (password !== confirmPassword) {
-      res.status(400).json({ error: "Passwords do not Match" });
+      res.status(400).json({ error: "Passwords do not Match!" });
     }
 
     // check if user exist
@@ -81,18 +81,20 @@ const login = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
+    const correctPassword = await bcrypt.compare(
+      password,
+      user?.password || ""
+    );
 
-    // matching password
-    if (user && (await bcrypt.compare(password, user.password))) {
-      res.status(201).json({
-        user,
-      });
-    } else {
-      res.status(404);
-      throw new Error("Invalid credentials.");
+    if (!user || !correctPassword) {
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     genereateTokenAndSetCookie(user._id, res);
+
+    res.status(200).json({
+      user,
+    });
   } catch (error) {
     console.log(error);
     res.status(404).json({
