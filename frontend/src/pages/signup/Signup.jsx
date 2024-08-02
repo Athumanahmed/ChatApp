@@ -1,6 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import Gender from "../../components/Gender";
 
 const Signup = () => {
+  const [formInputs, setFormInputs] = useState({
+    fullname: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+    gender: "",
+  });
+
+  const HandleForm = (e) => {
+    e.preventDefault();
+    console.log(formInputs);
+  };
+
+  const handleGender = (gender) => {
+    setFormInputs({ ...formInputs, gender });
+  };
   return (
     <div className="flex flex-col items-center justify-center min-w-96 mx-auto">
       <p className="text-center text-3xl font-extrabold text-white mb-4">
@@ -11,7 +29,7 @@ const Signup = () => {
           Sign up to start a conversation
         </h3>
 
-        <form>
+        <form onSubmit={HandleForm}>
           <div className="mb-2">
             <label className="label p-2">
               <span className="text-base label-text">Fullname</span>
@@ -21,6 +39,10 @@ const Signup = () => {
               placeholder="Enter your Fullname"
               className="w-full px-3 py-2 border bg-slate-100 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               required
+              value={formInputs.fullname}
+              onChange={(e) =>
+                setFormInputs({ ...formInputs, fullname: e.target.value })
+              }
             />
           </div>
 
@@ -33,6 +55,10 @@ const Signup = () => {
               placeholder="Enter your username"
               className="w-full px-3 py-2 border bg-slate-100 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               required
+              value={formInputs.username}
+              onChange={(e) =>
+                setFormInputs({ ...formInputs, username: e.target.value })
+              }
             />
           </div>
 
@@ -45,10 +71,14 @@ const Signup = () => {
               placeholder="Enter your password"
               className="w-full px-3 py-2 border bg-slate-100 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               required
+              value={formInputs.password}
+              onChange={(e) =>
+                setFormInputs({ ...formInputs, password: e.target.value })
+              }
             />
           </div>
 
-          <div>
+          <div className="mb-4">
             <label className="label p-2">
               <span className="text-base label-text">Confirm Password</span>
             </label>
@@ -57,16 +87,20 @@ const Signup = () => {
               placeholder="re-type password"
               className="w-full px-3 py-2 border bg-slate-100 border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
               required
+              value={formInputs.confirmPassword}
+              onChange={(e) =>
+                setFormInputs({
+                  ...formInputs,
+                  confirmPassword: e.target.value,
+                })
+              }
             />
           </div>
 
-          <div className="flex flex-row gap-3 p-1">
-            <input type="checkbox" />
-            <label>Male</label>
-
-            <input type="checkbox" />
-            <label>Female</label>
-          </div>
+          <Gender
+            onCheckboxChange={handleGender}
+            selectedGender={formInputs.gender}
+          />
 
           <div>
             <button
@@ -78,9 +112,12 @@ const Signup = () => {
           </div>
           <div className="flex flex-row justify-between flex-wrap p-1">
             <p>Already have an account?</p>
-            <a href="#" className="text-md hover:text-blue-800 inline-block">
+            <Link
+              to={"/login"}
+              className="text-md hover:text-blue-800 inline-block"
+            >
               LogIn
-            </a>
+            </Link>
           </div>
         </form>
       </div>
