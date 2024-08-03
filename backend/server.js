@@ -8,19 +8,26 @@ const cors = require("cors");
 
 const app = express();
 // Allow all origins and methods (for development, refine for production)
-app.use(cors());
+// app.use(cors());
 const PORT = process.env.PORT || 8000;
 dotenv.config();
 
 // middlewares
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
+// Configure CORS
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/messages", require("./routes/messageRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
-
 
 app.use(errorHandler);
 app.listen(PORT, () => {

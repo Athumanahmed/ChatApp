@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 
-const getUserChats = async (req, res) => {
+const getUserForSideBar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
 
@@ -14,5 +14,5 @@ const getUserChats = async (req, res) => {
 };
 
 module.exports = {
-  getUserChats,
+  getUserForSideBar,
 };

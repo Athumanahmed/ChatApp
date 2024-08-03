@@ -1,18 +1,20 @@
 const jwt = require("jsonwebtoken");
 
-const genereateTokenAndSetCookie = (userId, res) => {
+const generateTokenAndSetCookie = (userId, res) => {
   const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-    expiresIn: "10d",
+    expiresIn: "15d",
   });
 
   res.cookie("jwt", token, {
-    maxAge: 15 * 24 * 60 * 60 * 1000,
+    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
     httpOnly: true,
     sameSite: "strict",
-    secure: process.env.NODE_ENV !== "development",
+    secure: process.env.NODE_ENV !== "development", // Secure should be true in production
   });
+
+  return token;
 };
 
 module.exports = {
-  genereateTokenAndSetCookie,
+  generateTokenAndSetCookie,
 };

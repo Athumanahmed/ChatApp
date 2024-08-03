@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const {
-  genereateTokenAndSetCookie,
+  generateTokenAndSetCookie,
 } = require("../utils/generateTokenandCookies");
 
 const getAll = async (req, res) => {
@@ -50,7 +50,7 @@ const register = async (req, res) => {
     const malePic = `https://avatar.iran.liara.run/public/boy?username=${username}`;
     const femalePic = `https://avatar.iran.liara.run/public/girl?username=${username}`;
 
-    const user = await User({
+    const newUser = await User({
       fullname,
       username,
       email,
@@ -59,13 +59,18 @@ const register = async (req, res) => {
       profilePic: gender === "male" ? malePic : femalePic,
     });
 
-    if (user) {
+    if (newUser) {
       // generate token here
-      genereateTokenAndSetCookie(user._id, res);
-      await user.save();
+      generateTokenAndSetCookie(newUser._id,res);
+      await newUser.save();
 
       res.status(201).json({
-        user,
+        _id: newUser._id,
+        fullName: newUser.fullName,
+        username: newUser.username,
+        email: newUser.email,
+        profilePic: newUser.profilePic,
+        token: genereateTokenAndSetCookie(newUser._id),
       });
     }
   } catch (error) {
@@ -90,10 +95,15 @@ const login = async (req, res) => {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    genereateTokenAndSetCookie(user._id, res);
+    const token = generateTokenAndSetCookie(user._id, res);
 
     res.status(200).json({
-      user,
+      _id: user._id,
+      fullName: user.fullName,
+      username: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+      token
     });
   } catch (error) {
     console.log(error);

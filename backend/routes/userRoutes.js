@@ -1,8 +1,8 @@
 const express = require("express");
-const { getUserChats } = require("../controllers/userController");
+const { getUserForSideBar } = require("../controllers/userController");
 const { protectRoute } = require("../middleware/protectRoute");
 
 const router = express.Router();
 
-router.get('/',protectRoute,getUserChats)
+router.get("/", protectRoute, getUserForSideBar);
 module.exports = router;
