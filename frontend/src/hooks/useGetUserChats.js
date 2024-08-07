@@ -10,14 +10,16 @@ const useGetUserChats = () => {
       setLoading(true);
 
       try {
+        const userInfo = JSON.parse(localStorage.getItem("user-info"));
         const res = await fetch("http://localhost:8000/api/users/", {
-          withCredentials: true,
+          headers: { userInfo: JSON.stringify(userInfo) },
         });
         const data = await res.json();
+        console.log(data.data);
         if (data.error) {
           throw new Error(data.error);
         }
-        setChats(data);
+        setChats(data.data);
       } catch (error) {
         toast.error(error.message);
       } finally {

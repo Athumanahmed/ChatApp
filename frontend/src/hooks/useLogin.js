@@ -18,11 +18,14 @@ const useLogin = () => {
       });
 
       const data = await res.json();
+
+      localStorage.setItem("user-info", JSON.stringify(data));
       if (data.error) {
         throw new Error(data.error);
       }
 
-      localStorage.setItem("user-info", JSON.stringify(data));
+      // localStorage.setItem("user-info", JSON.stringify(data));
+      
       setAuthUser(data);
     } catch (error) {
       toast.error(error.message);
